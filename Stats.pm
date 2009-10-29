@@ -30,10 +30,16 @@ return $corr;
 }
 
 sub hypergeometric {
-    my $n = $_[0];
-    my $p = $_[1];
-    my $k = $_[2];
-    my $r = $_[3];
+# Hypergeometric tail probability
+#
+# Returns one-tailed probability based on the hypergeometric distribution:
+# the probability of witnessing r successes in a sample of k items from
+# a pool of size n, with r having prob (proportion) p, sampling without
+# replacement. Uses natural log n choose k and factorial subroutines.
+    my $n = $_[0]; #population_size
+    my $p = $_[1]; #proportion
+    my $k = $_[2]; #sample
+    my $r = $_[3]; #successes
     my $q;
     my $np;
     my $nq;
@@ -91,9 +97,52 @@ sub lNchooseK {
     $answer = $answer - &lFactorial($k);
     return $answer;
 }
-
-
-
-
-
 1;
+
+=head1 NAME
+
+Stats - a module of frequently used statistical methods 
+
+=head1 AUTHOR
+
+Dan MacLean (dan.maclean@tsl.ac.uk)
+
+=head1 SYNOPSIS
+
+	use DanMaths::Stats;
+	my $population_size = 2410;
+	my $proportion_successes_in_population = 0.4;
+	my $attempts = '341';
+	my $succeses = '291';
+	my $p = Stats::hypergeometric($population_size,$proportion_successes_in_population,$attempts,$succeses);
+
+=head1 DESCRIPTION
+
+The Stats module contains routines for carrying out some frequently used statistical tests that are not implemented elsewhere.
+The module does not create objects like some of the other modules, rather its methods are accessed in the manner of subroutines in external files.
+
+=head1 METHODS
+
+=over
+
+=item hypergeometric(n,p,k,r)
+
+Returns one-tailed probability based on the hypergeometric distribution: the probability of witnessing r successes in a sample
+of k items from a pool of size n, with r having prob (proportion) p, sampling without replacement.
+
+	my $population_size = 2410;
+	my $proportion_successes_in_population = 0.4;
+	my $attempts = '341';
+	my $succeses = '291';
+	my $p = Stats::hypergeometric($population_size,$proportion_successes_in_population,$attempts,$succeses);
+
+=item bonferroni_correct(p_val, number_of_repeats);
+
+Returns a bonferroni_corrected p value for the provided p value based on the number of times the test was repeated
+
+	my $p_value = 0.01;
+	my $number_of_repeats = 145;
+	my $bonferroni = Stats::bonferroni_correct($p_value, $number_of_repeats);
+
+=back
+
